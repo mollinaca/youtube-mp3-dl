@@ -1,21 +1,27 @@
 #!/usr/bin/env python3
 
-from yt_dlp import YoutubeDL
+import subprocess
+import os
 
 def main():
-    print ("URL : ", end="")
-    url = input()
+    print("URL : ", end="")
+    url = input().strip()
 
-    ydl_video_opts = {
-        'outtmpl': '%(id)s'+'_.mp3',
-        'format': 'bestaudio'
-    }
+    node_path = os.path.expandvars("$HOME/.local/share/mise/shims/node")
 
-    with YoutubeDL(ydl_video_opts) as ydl:
-        result = ydl.download(url)
+    cmd = [
+        "yt-dlp",
+        "--js-runtime", f"node:{node_path}",
+        "--remote-components", "ejs:github",
+        "-f", "bestaudio",
+        "-x",
+        "--audio-format", "mp3",
+        "-o", "%(id)s_.mp3",
+        url
+    ]
 
-    return
+    subprocess.run(cmd)
 
 if __name__ == '__main__':
     main()
-    exit (0)
+
