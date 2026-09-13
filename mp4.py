@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import sys
+
 from yt_dlp import YoutubeDL
+
 
 def main():
     if len(sys.argv) > 1:
@@ -10,16 +12,13 @@ def main():
 
     if url is None:
         print("URL : ", end="")
-        url = input()
+        url = input().strip()
 
+    # サイト（YouTube, ABEMA等）を問わず最高画質・音質で取得しMP4で出力する設定
     ydl_video_opts = {
-        'format': 'bestvideo+bestaudio/best',  # 柔軟な指定
-        'merge_output_format': 'mp4',
-        'outtmpl': '%(title)s.%(ext)s',  # 動画タイトルに変更
-        'postprocessors': [{
-            'key': 'FFmpegVideoConvertor',
-            'preferedformat': 'mp4',  # 出力を mp4 に
-        }],
+        'format': 'bv*+ba/b',        # 映像・音声をそれぞれ最高画質で取得（無ければ単体ストリーム）
+        'merge_output_format': 'mp4', # 結合時のフォーマットをMP4に指定
+        'outtmpl': '%(title)s.%(ext)s',
     }
 
     with YoutubeDL(ydl_video_opts) as ydl:
